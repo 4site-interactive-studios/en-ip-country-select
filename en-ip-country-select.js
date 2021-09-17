@@ -1,76 +1,43 @@
-window.addEventListener('DOMContentLoaded', function() {
-	var opt_in_field = document.querySelector('input[name="supporter.questions.11126"]');
-	if(opt_in_field) {
-		function is_in_country(callback, country_list) {
-			var req = new XMLHttpRequest();
+let DOMReady = function(callback) {
+	document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
+};
 
-			req.addEventListener('load', function() {
-				var loc_idx = this.responseText.indexOf('loc=');
-				if(loc_idx !== -1) {
-					var country_code = this.responseText.substring(loc_idx+4, loc_idx+6);
-					var country_in_list = (country_list.indexOf(country_code) !== -1);
-					callback(country_in_list);
-				} else {
-					callback(false);
-				}
-			});
-			req.addEventListener('error', function() {
-				callback(false);
-			});
-			req.addEventListener('abort', function() {
-				callback(false);
-			});
-			req.open('GET', 'https://www.cloudflare.com/cdn-cgi/trace');
-			req.send();
-		}
-		var country_list = [
-			'AU', // Australia
-			'AT', // Austria
-			'BE', // Belgium
-			'BR', // Brazil
-			'BG', // Bulgaria
-			'CA', // Canada
-			'CL', // Chile
-			'CN', // China
-			'HR', // Croatia
-			'CY', // Republic of Cyprus
-			'CZ', // Czech Republic
-			'DK', // Denmark
-			'EE', // Estonia
-			'FI', // Finland
-			'FR', // France
-			'DE', // Germany
-			'GR', // Greece
-			'HU', // Hungary
-			'IN', // India
-			'IE', // Ireland
-			'IT', // Italy
-			'JP', // Japan
-			'LV', // Latvia
-			'LT', // Lithuania
-			'LU', // Luxembourg
-			'MT', // Malta
-			'NL', // Netherlands
-			'NZ', // New Zealand
-			'PL', // Poland
-			'PT', // Portugal
-			'RO', // Romania
-			'SK', // Slovakia
-			'SI', // Slovenia
-			'ZA', // South Africa
-			'KR', // South Korea
-			'ES', // Spain
-			'SE', // Sweden
-			'CH', // Switzerland
-			'TH'  // Thailand
-		];
-		is_in_country(function(result) {
-			if(result) {
-				//console.log('country is in list; unchecking opt-in field');
-				opt_in_field.checked = false;
-			} else {
-				//console.log('country is not in list; do nothing');
-			}
-		}, country_list);
-	}
+DOMReady(function() {
+  // DOM ready!
+  const country_field = document.querySelector('select#en__field_supporter_country'); // Find the Engaging Networks select dropdown country field
+  const country_field_options = country_field.querySelectorAll("option"); // Check that the select dropdown country field has options
+
+  if(country_field.options) {
+		  let req = new XMLHttpRequest();
+		  req.addEventListener('load', function() {
+			  let loc_idx = this.responseText.indexOf('loc=');
+			  if(loc_idx !== -1) {
+				  let country_code = this.responseText.substring(loc_idx+4, loc_idx+6);
+
+				  // If a country code is returned, proceed
+				  if(country_code){
+
+					// Checks a the select drodown country field for the presence of the returned country code
+					country_field_options.forEach( o => {
+						if( o.value === country_code) {
+							country_field.value = country_code;
+							console.log("Country field was populated based on IP address with: ", country_code)
+						} else {
+							console.log("Country field was NOT populated based on IP address because the value returned is not present in the country select dropdown: ", country_code)
+						}
+					});
+				  }
+			  } else {
+				  callback(false);
+			  }
+		  });
+		  req.addEventListener('error', function() {
+			  callback(false);
+		  });
+		  req.addEventListener('abort', function() {
+			  callback(false);
+		  });
+		  req.open('GET', 'https://www.cloudflare.com/cdn-cgi/trace');
+		  req.send();
+  }
 });
