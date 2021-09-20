@@ -4,4 +4,4 @@ Use 4Site's drop in-place code to automatically select the Country Address field
 # How to Use
 * Option 1: Create a code block and include the script contents within a <script> tag.  Then place that code block in any page containing a country selection field.
 * Option 2: Edit your page template and include teh script contents within a <script> tag.  Assign that template to any page containing a country selection field.
-* Option 2: Include <script src="https://cdn.jsdelivr.net/gh/4site-interactive-studios/en-ip-country-select/en-ip-country-select.js"></script> within your code block or template.
+* Option 2: Include <script async src="https://cdn.jsdelivr.net/gh/4site-interactive-studios/en-ip-country-select/en-ip-country-select.js"></script> within your code block or template.
